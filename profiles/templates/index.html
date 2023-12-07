@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ profile.name }}</title>
+    <style type="text/css">
+        label[for=id_honeypot], #id_honeypot {
+          display: none;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ profile.name }}</h1>
+{% load comments %}
+{% get_comment_form for profile as form %}
+<div>
+    <form action="{% comment_form_target %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <input type="submit" name="preview" value="Preview">
+        </div>
+    </form>
+</div>
+{% get_comment_list for profile as comment_list %}
+<div>
+    <dl id="comments">
+        {% for comment in comment_list %}
+        <dt id="c{{ comment.id }}">
+            {{ comment.submit_date }} - {{ comment.name }}
+        </dt>
+        <dd>
+            <p>{{ comment.comment }}</p>
+        </dd>
+        <p><a href="{% url 'index' %}#c{{ comment.id }}">#</a></p></dd>
+        {% endfor %}
+    </dl>
+</div>
+</body>
+</html>
